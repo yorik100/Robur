@@ -435,7 +435,7 @@ function Jinx.OnDraw()
 		if Jinx.Q:IsLearned() then
 			QRange = 625 + ({ 100, 125, 150, 175, 200 })[Jinx.Q:GetLevel()]
 		else
-			QRange = 0
+			QRange = 725
 		end
 	end
     Renderer.DrawCircle3D(LocalPlayer.Position, QRange, 30, 1, 0xFFFFFFFF)
