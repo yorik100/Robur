@@ -38,6 +38,7 @@ local HitChanceStrings = { "Collision", "OutOfRange", "VeryLow", "Low", "Medium"
 
 local LocalPlayer = ObjectManager.Player.AsHero
 
+
 -- Check if we are using the right champion
 if LocalPlayer.CharName ~= "Jinx" then return false end
 
@@ -99,6 +100,15 @@ Jinx.R.GetDamage = function (Target, Surrounding)
   end
   return DamageLib.CalculatePhysicalDamage(LocalPlayer, Target, RawDamage)
 end
+function HasStatik()
+    for key, item in pairs(LocalPlayer.Items) do
+        if item and (item.ItemId == 3094) then
+            return true
+        end
+    end
+    return false
+end
+local statikBuff = LocalPlayer:GetBuff("itemstatikshankcharge")
 
 function Utils.IsGameAvailable()
   -- Is game available to automate stuff
@@ -120,7 +130,11 @@ end
 
 function Utils.GetTrueMiniGunRange(Target)
   -- Calculate mini gun range
-  return 525 + Utils.GetBoundingRadius(Target)
+  if (HasStatik() and statikBuff) and (statikBuff.Count == 100) then
+	return 525 + 150 + Utils.GetBoundingRadius(Target)
+  else
+	return 525 + Utils.GetBoundingRadius(Target)
+  end
 end
 
 function Utils.GetTrueBazookaRange(Target)
@@ -130,7 +144,11 @@ function Utils.GetTrueBazookaRange(Target)
   if Jinx.Q:IsLearned() then
     BonusRange = ({ 100, 125, 150, 175, 200 })[Jinx.Q:GetLevel()]
   end
-
+  if (HasStatik() and statikBuff) and (statikBuff.Count == 100) then
+	return 525 + math.min(525*0.35, 150) + Utils.GetBoundingRadius(Target)
+  else
+	return 525 + Utils.GetBoundingRadius(Target)
+  end
   return Utils.GetTrueMiniGunRange(Target) + BonusRange
 end
 
@@ -438,13 +456,17 @@ function Jinx.OnDraw()
 			QRange = 725
 		end
 	end
-    Renderer.DrawCircle3D(LocalPlayer.Position, QRange, 30, 1, 0xFFFFFFFF)
+	if (HasStatik() and statikBuff) and (statikBuff.Count == 100) then
+		QRange = QRange + math.min(QRange*0.35, 150)
+	end
+    Renderer.DrawCircle3D(LocalPlayer.Position, QRange, 30, 1, 0xFF0000FF)
   end
 
   return true
 end
 
 function Jinx.OnTick()
+
   -- Check if game is available to do anything
   if not Utils.IsGameAvailable() then return false end
 
