@@ -144,11 +144,6 @@ function Utils.GetTrueBazookaRange(Target)
   if Jinx.Q:IsLearned() then
     BonusRange = ({ 100, 125, 150, 175, 200 })[Jinx.Q:GetLevel()]
   end
-  if (HasStatik() and statikBuff) and (statikBuff.Count == 100) then
-	return 525 + math.min(525*0.35, 150) + Utils.GetBoundingRadius(Target)
-  else
-	return 525 + Utils.GetBoundingRadius(Target)
-  end
   return Utils.GetTrueMiniGunRange(Target) + BonusRange
 end
 
