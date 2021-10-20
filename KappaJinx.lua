@@ -69,7 +69,7 @@ Jinx.W = SpellLib.Skillshot({
 
 Jinx.E = SpellLib.Skillshot({
   Slot = SpellSlots.E,
-  Range = 900,
+  Range = 925,
   Radius = 57,
   Speed = 1750,
   Delay = 0.5,
